@@ -15,8 +15,9 @@ func main() {
   hander := MyHandler{}
   server := http.Server{
     Addr: "127.0.0.1:8080",
-    Handler: &hander,
   }
+
+  http.Handle("/hello", &hander)
 
   server.ListenAndServe()
 }
