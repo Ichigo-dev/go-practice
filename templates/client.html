@@ -5,11 +5,11 @@
   <title></title>
 </head>
 <body>
-  {{ if . }}
-  <p>aa</p>
-  {{ else }}
-  <p>bb</p>
+  <ul>
+  {{ range .array}}
+    <li>{{ . }}</li>
   {{ end }}
+  </ul>
   <form action="http://127.0.0.1:8080/process?hello=world&thread=123" method="post" entype="application/x-www-form-urlencoded">
     <input type="text" name="hello" value="sau sheong">
     <input type="text" name="thread" value="123">

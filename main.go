@@ -24,7 +24,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 func client(w http.ResponseWriter, r *http.Request) {
   t := template.Must(template.ParseFiles("templates/client.html"))
   rand.Seed(time.Now().Unix())
-  t.Execute(w, rand.Intn(10) > 5)
+  t.Execute(w, map[string][]int{
+    "array": []int{1, 2, 3, 4, 5},
+  })
 }
 
 func main() {
