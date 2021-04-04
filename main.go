@@ -2,7 +2,9 @@ package main
 
 import (
   "fmt"
+  "math/rand"
   "net/http"
+  "time"
   "github.com/julienschmidt/httprouter"
   "html/template"
 )
@@ -21,7 +23,8 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 func client(w http.ResponseWriter, r *http.Request) {
   t := template.Must(template.ParseFiles("templates/client.html"))
-  t.Execute(w, "Hello")
+  rand.Seed(time.Now().Unix())
+  t.Execute(w, rand.Intn(10) > 5)
 }
 
 func main() {
