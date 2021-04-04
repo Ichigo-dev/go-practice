@@ -20,7 +20,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 }
 
 func client(w http.ResponseWriter, r *http.Request) {
-  t, _ := template.ParseFiles("/templates/client.html")
+  t := template.Must(template.ParseFiles("templates/client.html"))
   t.Execute(w, "Hello")
 }
 
