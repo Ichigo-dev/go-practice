@@ -57,6 +57,16 @@ func (post *Post) Create() (err error) {
   return
 }
 
+func (post *Post) Update() (err error) {
+  _, err = Db.Exec("update posts set content = $2, author = $3 where id = $1", post.Id, post.Content, post.Author)
+  return
+}
+
+func (post *Post) Delete() (err error) {
+  _, err = Db.Exec("delete from posts where id = $1", post.Id)
+  return
+}
+
 func main() {
   post := Post{Content: "Hello World!", Author: "Sau Sheong"}
 
@@ -65,4 +75,12 @@ func main() {
   fmt.Println(post)
   readPost,_ := GetPost(post.Id)
   fmt.Println(readPost)
+
+  readPost.Content = "bonjour Monde!"
+  readPost.Author = "Pierre"
+  readPost.Update()
+
+  fmt.Println(GetPost(readPost.Id))
+
+  readPost.Delete()
 }
