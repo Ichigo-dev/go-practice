@@ -5,6 +5,8 @@
   <title></title>
 </head>
 <body>
+  {{ template "header.html" }}
+  {{ 12.3456 | printf "%.2f" }}
   <ul>
   {{ range .array}}
     <li>{{ . }}</li>
