@@ -2,6 +2,7 @@ package main
 
 import (
   "fmt"
+  "errors"
   "database/sql"
   _"github.com/lib/pq"
 )
@@ -10,10 +11,19 @@ type Post struct {
   Id int
   Content string
   Author string
+  Comments []Comment
+}
+
+type Comment struct {
+  Id int
+  Content string
+  Author string
+  Post *Post
 }
 
 var Db *sql.DB
 
+// DB初期化
 func init() {
   var err error
   Db, err = sql.Open("postgres", "user=postgres dbname=go-web-app sslmode=disable")
@@ -22,6 +32,7 @@ func init() {
   }
 }
 
+// Post
 func Posts(limit int) (posts []Post, err error) {
   rows, err := Db.Query("select id, content, author from posts limit $1", limit)
   if err != nil {
@@ -67,20 +78,59 @@ func (post *Post) Delete() (err error) {
   return
 }
 
+func (post *Post) Comments() (comments []Comment, err error) {
+  rows, err := Db.Query("select id, content, author from comments where post_id = $1", post.Id)
+  if err != nil {
+    fmt.Println(err)
+    return
+  }
+  for rows.Next() {
+    comment := Comment{Post: post}
+    err = rows.Scan(&comment.Id, &comment.Content, &comment.Author)
+    if err != nil {
+      fmt.Println(err)
+      return
+    }
+    comments = append(comments, comment)
+  }
+
+  rows.Close()
+  return
+}
+
+// Comment
+
+func (comment *Comment) Create() (err error) {
+  if comment.Post == nil {
+    err = errors.New("投稿が見つかりません。")
+    return
+  }
+  err = Db.QueryRow("insert into comments (content, author, post_id) values ($1, $2, $3) returning id", comment.Content, comment.Author, comment.Post.Id).Scan(&comment.Id)
+  return
+}
+
+func (comment *Comment) Post
+
 func main() {
   post := Post{Content: "Hello World!", Author: "Sau Sheong"}
-
-  fmt.Println(post)
   post.Create()
-  fmt.Println(post)
-  readPost,_ := GetPost(post.Id)
-  fmt.Println(readPost)
 
-  readPost.Content = "bonjour Monde!"
-  readPost.Author = "Pierre"
-  readPost.Update()
+  comment := Comment{Content: "Nice!!", Author: "bonjour Monde!", Post: &post}
+  comment.Create()
+  comment.Create()
+  comment.Create()
 
-  fmt.Println(GetPost(readPost.Id))
+  comments,_ := post.Comments()
+  fmt.Println(comments)
 
-  readPost.Delete()
+  //readPost.Content = "bonjour Monde!"
+  //readPost.Author = "Pierre"
+  //readPost.Update()
+
+  //fmt.Println(GetPost(readPost.Id))
+
+  //readPost.Delete()
+
+  // posts,_ := Posts(5)
+  // fmt.Println(posts)
 }
