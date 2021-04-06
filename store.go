@@ -11,7 +11,6 @@ type Post struct {
   Id int
   Content string
   Author string
-  Comments []Comment
 }
 
 type Comment struct {
@@ -78,7 +77,7 @@ func (post *Post) Delete() (err error) {
   return
 }
 
-func (post *Post) Comments() (comments []Comment, err error) {
+func (post *Post) Comment() (comments []Comment, err error) {
   rows, err := Db.Query("select id, content, author from comments where post_id = $1", post.Id)
   if err != nil {
     fmt.Println(err)
@@ -109,8 +108,6 @@ func (comment *Comment) Create() (err error) {
   return
 }
 
-func (comment *Comment) Post
-
 func main() {
   post := Post{Content: "Hello World!", Author: "Sau Sheong"}
   post.Create()
@@ -120,8 +117,8 @@ func main() {
   comment.Create()
   comment.Create()
 
-  comments,_ := post.Comments()
-  fmt.Println(comments)
+  comments,_ := post.Comment()
+  fmt.Println(comments[0].Post.Id)
 
   //readPost.Content = "bonjour Monde!"
   //readPost.Author = "Pierre"
