@@ -1,0 +1,18 @@
+{
+  "id": 1,
+  "content": "hello world",
+  "author": "sau",
+  "comments": 
+  [
+    {
+      "id": 1,
+      "content": "nice",
+      "author": "sau"
+    },
+    {
+      "id": 2,
+      "content": "nice",
+      "author": "sau"
+    }
+  ]
+}
